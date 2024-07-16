@@ -5,17 +5,22 @@
 {% endif %}
 
 {% if not loading %}
-    {% for station in trains %}
-        <div class="train-station">
-            <h3 class="train-station__name">{{ station.locationName }}</h3>
+    <div class="train-stations">
+        <h2 class="transit-mode-header">Trains</h2>
+        {% for station in trains %}
+            <div class="train-station">
+                <h3 class="train-station__name">{{ station.locationName }}</h3>
 
-            {% for train in station.trains %}
-                <div class="train-station__prediction">
-                    <span class="train-line-color">{{ train.line }}</span>
-                    <span class="train-destination">{{ train.destination }}</span>
-                    <span class="train-minutes-away">{{ train.minutes }}</span>
-                </div>
-            {% endfor %}
-        </div>
-    {% endfor %}
+                {% for train in station.trains %}
+                    <div class="train-station__prediction">
+                        <span class="train-line-color train-line-color__{{ train.line }}">{{ train.line }}</span>
+                        <span class="train-destination">{{ train.destination }}</span>
+                        <span class="train-minutes-away">{{ train.minutes }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <span class="update-time">Last updated: {{ trainsLastUpdated }}</span>
+    </div>
 {% endif %}

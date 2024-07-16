@@ -14,8 +14,6 @@ module.exports = NodeHelper.create({
     },
 
     socketNotificationReceived(notification, payload) {
-        Log.info(`notification pre ${notification}`);
-
         switch (notification) {
             case "WMATA_INIT":
                 this.apiKey = payload.apiKey;
@@ -65,7 +63,7 @@ module.exports = NodeHelper.create({
     formatTrainData(data) {
         return {
             ...data,
-            ...{'Min': this.normalizeTrainMinutes(data['Min']) }
+            ...{'MinNumber': this.normalizeTrainMinutes(data['Min']) }
         };
     },
 

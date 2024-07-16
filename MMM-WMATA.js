@@ -26,7 +26,8 @@ Module.register("MMM-WMATA", {
 
         this.trainUpdateInterval = 0;
 
-        this.trainTimesLastUpdated = null;
+        this.trainTimesLastUpdatedTimestamp = null;
+        this.trainTimesLastUpdatedFormatted = null;
 
         this.formattedTrainData = null;
 
@@ -50,7 +51,8 @@ Module.register("MMM-WMATA", {
                     this.startFetchingLoops();
                     break;
                 case "WMATA_TRAIN_TIMES_DATA":
-                    this.trainTimesLastUpdated = now.format("x");
+                    this.trainTimesLastUpdatedTimestamp = now.format("x");
+                    this.trainTimesLastUpdatedFormatted = now.format("MMM D - h:mm:ss a");
 
                     this.formattedTrainData = this.formatTrains(payload.trainData);
 
@@ -79,6 +81,7 @@ Module.register("MMM-WMATA", {
         return {
             loading: false,
             trains: this.formattedTrainData,
+            trainsLastUpdated: this.trainTimesLastUpdatedFormatted,
         };
     },
 
@@ -117,13 +120,10 @@ Module.register("MMM-WMATA", {
     },
 
     formatTrains(trains) {
-        // TODO: Group by station
         const formattedMap = Map.groupBy(
             trains,
             ({ LocationName }) => LocationName
         );
-
-        console.debug(trains);
 
         const formatted = [];
 
@@ -133,8 +133,8 @@ Module.register("MMM-WMATA", {
                 trains: trains.map((train) => {
                     return {
                         line: train['Line'],
-                        minutes: train['Min'],
-                        destination: train['Destination'],
+                        minutes: train['MinNumber'],
+                        destination: train['DestinationName'] || train['Destination'],
                         location: train['LocationName']
                     }
                 })
@@ -142,9 +142,6 @@ Module.register("MMM-WMATA", {
 
             formatted.push(locationFormatted);
         }
-
-        console.log(`formatted is ${formatted}`);
-        console.debug(formatted);
 
         return formatted;
     },
