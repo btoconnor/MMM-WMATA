@@ -1,0 +1,21 @@
+{% if error %}
+    <div class="light xsmall">Error</div>
+{% elif loading %}
+    <div class="dimmed light small">Loading...</div>
+{% endif %}
+
+{% if not loading %}
+    {% for station in trains %}
+        <div class="train-station">
+            <h3 class="train-station__name">{{ station.locationName }}</h3>
+
+            {% for train in station.trains %}
+                <div class="train-station__prediction">
+                    <span class="train-line-color">{{ train.line }}</span>
+                    <span class="train-destination">{{ train.destination }}</span>
+                    <span class="train-minutes-away">{{ train.minutes }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endif %}
