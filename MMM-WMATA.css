@@ -9,6 +9,13 @@
   width: 100%;
 }
 
+.MMM-WMATA .bus-stop {
+  display: flex;
+  flex-flow: column nowrap;
+  place-content: normal;
+  width: 100%;
+}
+
 .MMM-WMATA .train-station__prediction {
     display: grid;
     grid-template-areas: "train-line-color train-destination train-minutes-away";
@@ -17,7 +24,20 @@
     padding: 0 5px;
 }
 
+.MMM-WMATA .bus-stop__prediction {
+    display: grid;
+    grid-template-areas: "bus-stop__route bus-stop__direction bus-stop__minutes-away";
+    grid-template-columns: 10% 75% 15%;
+    gap: 0 5px;
+    padding: 0 5px;
+}
+
 .MMM-WMATA .train-station__prediction .train-destination {
+    text-align: left;
+    padding-left: 1em;
+}
+
+.MMM-WMATA .bus-stop__prediction .bus-stop__direction {
     text-align: left;
     padding-left: 1em;
 }

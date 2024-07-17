@@ -23,6 +23,10 @@ module.exports = NodeHelper.create({
             case "WMATA_TRAIN_TIMES_GET":
                 this.getTrainTimes(payload);
                 break;
+
+            case "WMATA_BUS_TIMES_GET":
+                this.getBusTimes(payload);
+                break;
         }
 
     },
@@ -75,6 +79,52 @@ module.exports = NodeHelper.create({
         } else {
             return parseInt(value);
         }
+    },
+
+    getBusTimes(payload) {
+        console.debug(payload.busStops);
+        const busPredictions = {};
+
+        const busFetches = payload.busStops.map(stopID => this.getBusStopPrediction(stopID));
+
+        console.log("okay, here");
+        Promise.all(busFetches)
+            .then(responses => {
+                responses.map((r) => {
+                    busPredictions[r.stopID] = r;
+                })
+            })
+            .then(() => {
+                console.debug(busPredictions);
+            })
+            .then(() => {
+                this.sendSocketNotification("WMATA_BUS_TIMES_DATA", {
+                    identifier: payload.identifier,
+                    busPredictions
+                });
+            });
+    },
+
+    getBusStopPrediction(stopID) {
+        const url = `https://api.wmata.com/NextBusService.svc/json/jPredictions?StopID=${stopID}`;
+
+        return fetch(url, {
+            method: "GET",
+            headers: {
+                "api_key": this.apiKey,
+            }
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                const stopPredictions = data['Predictions'];
+
+                return { stopID: stopID,
+                         predictions: stopPredictions,
+                         locationName: data['StopName']}
+            });
+
     },
 
 });

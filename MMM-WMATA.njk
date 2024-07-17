@@ -23,4 +23,29 @@
 
         <span class="update-time">Last updated: {{ trainsLastUpdated }}</span>
     </div>
+
+    <div class="bus-stops">
+        <h2 class="transit-mode-header">Buses</h2>
+
+        {% for busStop in buses %}
+            <div class="bus-stop">
+                <h3 class="bus-stop__name">{{ busStop.locationName }}</h3>
+
+                {% for prediction in busStop.buses %}
+                    <div class="bus-stop__prediction">
+                        <span class="bus-stop__route">{{ prediction.RouteID }}</span>
+                        <span class="bus-stop__direction">{{ prediction.DirectionText }}</span>
+                        <span class="bus-stop__minutes-away">{{ prediction.Minutes }}</span>
+                    </div>
+                {% endfor %}
+
+                {% if busStop.buses.length == 0 %}
+                    <div class="bus-stop__empty">
+                        No buses running
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <span class="update-time">Last updated: {{ trainsLastUpdated }}</span>
 {% endif %}
