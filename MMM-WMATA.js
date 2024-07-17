@@ -26,6 +26,7 @@ Module.register("MMM-WMATA", {
         this.initialized = false;
 
         this.trainUpdateInterval = 0;
+        this.busUpdateInterval = 0;
 
         this.trainTimesLastUpdatedTimestamp = null;
         this.trainTimesLastUpdatedFormatted = null;
