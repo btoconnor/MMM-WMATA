@@ -13,6 +13,8 @@ Module.register("MMM-WMATA", {
 
         busStops: [],
         busUpdateInterval: 60,
+        showEmptyBusStops: true,
+        busFilterFn: (_datetime, _stationCode) => true,
 
         showBusIncidents: true,
         busIncidentUpdateInterval: 120,
@@ -102,6 +104,7 @@ Module.register("MMM-WMATA", {
 
             buses: this.formattedBusData,
             busesLastUpdated: this.busTimesLastUpdatedFormatted,
+            showEmptyBusStops: this.config.showEmptyBusStops,
         };
     },
 
