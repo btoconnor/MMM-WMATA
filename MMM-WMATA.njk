@@ -7,6 +7,34 @@
 {% if not loading %}
     <div class="train-stations">
         <h2 class="transit-mode-header">Trains</h2>
+
+        {% if trainDelays.length > 0 %}
+            <div class="train-delays">
+                {% if trainDelays.length == 1 %}
+                    Delays reported on the {{ trainDelays | first }} line.
+                {% else %}
+                    Delays reported on the {{ trainDelays | join(", ") }} lines.
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if trainAlerts.length > 0 %}
+            <div class="train-alerts">
+                Alerts reported on the
+                {% for line in trainAlerts %}
+                    <span class="train-alerts__line-color train_alerts__line-color-{{ trainAlerts | first }}">
+                        {{ trainAlerts | first }}
+                    </span>
+                {% endfor %}
+
+                {% if trainAlerts.length == 1 %}
+                    line.
+                {% else %}
+                    lines.
+                {% endif %}
+            </div>
+        {% endif %}
+
         {% for station in trains %}
             <div class="train-station">
                 <h3 class="train-station__name">{{ station.locationName }}</h3>

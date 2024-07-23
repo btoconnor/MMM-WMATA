@@ -9,7 +9,7 @@ Module.register("MMM-WMATA", {
         trainUpdateInterval: 60,
 
         showTrainIncidents: true,
-        trainIncidentUpdateInterval: 120,
+        trainIncidentUpdateInterval: 300,
 
         busStops: [],
         busUpdateInterval: 60,
@@ -17,7 +17,7 @@ Module.register("MMM-WMATA", {
         busStopFilterFn: (_datetime, _stationCode) => true,
 
         showBusIncidents: true,
-        busIncidentUpdateInterval: 120,
+        busIncidentUpdateInterval: 300,
     },
 
     /**
@@ -30,6 +30,8 @@ Module.register("MMM-WMATA", {
         this.trainUpdateInterval = 0;
         this.busUpdateInterval = 0;
 
+        this.trainIncidentUpdateInterval = 0;
+
         this.trainTimesLastUpdatedTimestamp = null;
         this.trainTimesLastUpdatedFormatted = null;
 
@@ -38,6 +40,11 @@ Module.register("MMM-WMATA", {
 
         this.formattedTrainData = null;
         this.formattedBusData = null;
+        this.formattedTrainIncidentData = null;
+
+        this.trainDelays = [];
+        this.trainAlerts = [];
+
         this.activeBusStops = [];
 
         Log.info("WMATA Starting");
@@ -85,6 +92,16 @@ Module.register("MMM-WMATA", {
 
                     this.updateDom();
                     break;
+                case "WMATA_TRAIN_INCIDENTS_DATA":
+                    console.log("received update for train incidents");
+                    console.debug(payload.trainDelays);
+                    console.debug(payload.trainAlerts);
+
+                    this.trainDelays = payload.trainDelays.map(this.formatTrainLine);
+                    this.trainAlerts = payload.trainAlerts.map(this.formatTrainLine);
+
+                    this.updateDom();
+                    break;
             }
         }
     },
@@ -112,6 +129,9 @@ Module.register("MMM-WMATA", {
             buses: this.formattedBusData,
             busesLastUpdated: this.busTimesLastUpdatedFormatted,
             showEmptyBusStops: this.config.showEmptyBusStops,
+
+            trainDelays: this.trainDelays,
+            trainAlerts: this.trainAlerts,
         };
     },
 
@@ -130,7 +150,9 @@ Module.register("MMM-WMATA", {
             this.startBusTimeFetchingLoop(this.config.busUpdateInterval);
         }
 
-        // TODO: Start up loops for busses and incidents
+        if (this.config.showTrainIncidents === true) {
+            this.startTrainIncidentsFetchingLoop(this.config.trainIncidentUpdateInterval);
+        }
     },
 
     startTrainTimeFetchingLoop(trainUpdateInterval) {
@@ -152,6 +174,17 @@ Module.register("MMM-WMATA", {
             this.busUpdateInterval = setInterval(() => {
                 this.getBusTimes();
             }, busUpdateInterval * 1000);
+        }
+    },
+
+    startTrainIncidentsFetchingLoop(trainIncidentUpdateInterval) {
+        Log.info("Starting fetching loop for train incidents");
+        this.getTrainIncidents();
+
+        if (this.trainIncidentUpdateInterval === 0) {
+            this.trainIncidentUpdateInterval = setInterval(() => {
+                this.getTrainIncidents();
+            }, trainIncidentUpdateInterval * 1000);
         }
     },
 
@@ -179,6 +212,15 @@ Module.register("MMM-WMATA", {
 
                 return this.config.busStopFilterFn(new Date(), stop);
             })
+        });
+    },
+
+    getTrainIncidents() {
+        Log.info("Fetching train incidents...");
+
+        this.sendSocketNotification("WMATA_TRAIN_INCIDENTS_GET", {
+            identifier: this.identifier,
+            apiKey: this.config.apiKey
         });
     },
 
@@ -215,6 +257,7 @@ Module.register("MMM-WMATA", {
         for (let [busStopID, stopInfo] of Object.entries(busPredictions)) {
             const locationFormatted = {
                 locationName: stopInfo['locationName'],
+                busStopID,
                 buses: stopInfo['predictions'],
             }
 
@@ -222,5 +265,22 @@ Module.register("MMM-WMATA", {
         }
 
         return formatted;
+    },
+
+    formatTrainLine(trainLine) {
+        switch (trainLine) {
+            case 'RD':
+                return 'red';
+            case 'BL':
+                return 'blue';
+            case 'YL':
+                return 'yellow';
+            case 'SV':
+                return 'silver';
+            case 'OR':
+                return 'orange';
+            case 'GR':
+                return 'green';
+        }
     },
 });
