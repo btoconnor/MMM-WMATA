@@ -14,7 +14,7 @@ Module.register("MMM-WMATA", {
         busStops: [],
         busUpdateInterval: 60,
         showEmptyBusStops: true,
-        busFilterFn: (_datetime, _stationCode) => true,
+        busStopFilterFn: (_datetime, _stationCode) => true,
 
         showBusIncidents: true,
         busIncidentUpdateInterval: 120,
@@ -38,6 +38,7 @@ Module.register("MMM-WMATA", {
 
         this.formattedTrainData = null;
         this.formattedBusData = null;
+        this.activeBusStops = [];
 
         Log.info("WMATA Starting");
 
@@ -73,6 +74,12 @@ Module.register("MMM-WMATA", {
 
                     this.busTimesLastUpdatedTimestamp = now.format("x");
                     this.busTimesLastUpdatedFormatted = now.format("MMM D - h:mm:ss a");
+                    this.activeBusStops = Object.keys(payload.busPredictions).filter((stopID) => {
+                        return payload.busPredictions[stopID].predictions.length > 0;
+                    });
+
+                    console.log("active stops");
+                    console.debug(this.activeBusStops);
 
                     this.formattedBusData = this.formatBuses(payload.busPredictions);
 
@@ -163,7 +170,15 @@ Module.register("MMM-WMATA", {
         this.sendSocketNotification("WMATA_BUS_TIMES_GET", {
             identifier: this.identifier,
             apiKey: this.config.apiKey,
-            busStops: this.config.busStops,
+            busStops: this.config.busStops.filter((stop) => {
+                // If we're actively tracking buses, we'll always include this
+                // station in the update.
+                if (this.activeBusStops.includes(stop)) {
+                    return true;
+                }
+
+                return this.config.busStopFilterFn(new Date(), stop);
+            })
         });
     },
 

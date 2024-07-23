@@ -49,5 +49,7 @@
             {% endif %}
         {% endfor %}
 
-        <span class="update-time">Last updated: {{ busesLastUpdated }}</span>
+        {% if buses.length > 0 %}
+            <span class="update-time">Last updated: {{ busesLastUpdated }}</span>
+        {% endif %}
 {% endif %}
