@@ -1,0 +1,111 @@
+{% if error %}
+    <div class="light xsmall">Error</div>
+{% elif loading %}
+    <div class="dimmed light small">Loading...</div>
+{% endif %}
+
+{% if not loading %}
+    <div class="train-stations">
+        <h2 class="transit-mode-header">Trains</h2>
+
+        {% if trainDelays.length > 0 %}
+            <div class="train-delays">
+                {% if trainDelays.length == 1 %}
+                    Delays reported on the {{ trainDelays | first }} line.
+                {% else %}
+                    Delays reported on the {{ trainDelays | join(", ") }} lines.
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if trainAlerts.length > 0 %}
+            <div class="train-alerts">
+                Alerts reported on the
+                {% for line in trainAlerts %}
+                    <span class="train-alerts__line-color train_alerts__line-color-{{ line }}">
+                        {{ line }}
+                    </span>
+                {% endfor %}
+
+                {% if trainAlerts.length == 1 %}
+                    line.
+                {% else %}
+                    lines.
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% for station in trains %}
+            <div class="train-station">
+                <h3 class="train-station__name">{{ station.locationName }}</h3>
+
+                {% for train in station.trains %}
+                    <div class="train-station__prediction">
+                        <span class="train-line-color train-line-color__{{ train.line }}">{{ train.line }}</span>
+                        <span class="train-destination">{{ train.destination }}</span>
+                        <span class="train-minutes-away">{{ train.minutes }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <span class="update-time">Last updated: {{ trainsLastUpdated }}</span>
+    </div>
+
+    <div class="bus-stops">
+        <h2 class="transit-mode-header">Buses</h2>
+
+
+        {% if busDelays.length > 0 %}
+            <div class="bus-delays">
+                {% if busDelays.length == 1 %}
+                    Delays reported on the {{ busDelays | first }} route.
+                {% else %}
+                    Delays reported on the {{ busDelays | join(", ") }} routes.
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if busAlerts.length > 0 %}
+            <div class="bus-alerts">
+                {% set comma = joiner() %}
+
+                Alerts reported on the
+                {%- for route in busAlerts -%}
+                    <span class="bus-alerts__route train_alerts__route-{{ route }}">{{ comma() }} {{ route }}</span>
+                {%- endfor -%}
+
+                {% if busAlerts.length == 1 %}
+                    route.
+                {% else %}
+                    routes.
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% for busStop in buses %}
+            {% if busStop.buses.length > 0 or showEmptyBusStops == true %}
+                <div class="bus-stop">
+                    <h3 class="bus-stop__name">{{ busStop.locationName }}</h3>
+
+                    {% for prediction in busStop.buses %}
+                        <div class="bus-stop__prediction">
+                            <span class="bus-stop__route">{{ prediction.RouteID }}</span>
+                            <span class="bus-stop__direction">{{ prediction.DirectionText }}</span>
+                            <span class="bus-stop__minutes-away">{{ prediction.Minutes }}</span>
+                        </div>
+                    {% endfor %}
+
+                    {% if busStop.buses.length == 0 %}
+                        <div class="bus-stop__empty">
+                            No buses running.
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+
+        {% if buses.length > 0 or busAlerts.length > 0 or busDelays.length > 0 %}
+            <span class="update-time">Last updated: {{ busesLastUpdated }}</span>
+        {% endif %}
+{% endif %}
