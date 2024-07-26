@@ -105,7 +105,7 @@
             {% endif %}
         {% endfor %}
 
-        {% if buses.length > 0 %}
+        {% if buses.length > 0 or busAlerts.length > 0 or busDelays.length > 0 %}
             <span class="update-time">Last updated: {{ busesLastUpdated }}</span>
         {% endif %}
 {% endif %}
