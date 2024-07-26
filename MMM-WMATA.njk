@@ -22,8 +22,8 @@
             <div class="train-alerts">
                 Alerts reported on the
                 {% for line in trainAlerts %}
-                    <span class="train-alerts__line-color train_alerts__line-color-{{ trainAlerts | first }}">
-                        {{ trainAlerts | first }}
+                    <span class="train-alerts__line-color train_alerts__line-color-{{ line }}">
+                        {{ line }}
                     </span>
                 {% endfor %}
 
@@ -55,6 +55,34 @@
     <div class="bus-stops">
         <h2 class="transit-mode-header">Buses</h2>
 
+
+        {% if busDelays.length > 0 %}
+            <div class="bus-delays">
+                {% if busDelays.length == 1 %}
+                    Delays reported on the {{ busDelays | first }} route.
+                {% else %}
+                    Delays reported on the {{ busDelays | join(", ") }} routes.
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if busAlerts.length > 0 %}
+            <div class="bus-alerts">
+                {% set comma = joiner() %}
+
+                Alerts reported on the
+                {%- for route in busAlerts -%}
+                    <span class="bus-alerts__route train_alerts__route-{{ route }}">{{ comma() }} {{ route }}</span>
+                {%- endfor -%}
+
+                {% if busAlerts.length == 1 %}
+                    route.
+                {% else %}
+                    routes.
+                {% endif %}
+            </div>
+        {% endif %}
+
         {% for busStop in buses %}
             {% if busStop.buses.length > 0 or showEmptyBusStops == true %}
                 <div class="bus-stop">
@@ -70,7 +98,7 @@
 
                     {% if busStop.buses.length == 0 %}
                         <div class="bus-stop__empty">
-                            No buses running
+                            No buses running.
                         </div>
                     {% endif %}
                 </div>

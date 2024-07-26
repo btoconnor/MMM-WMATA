@@ -31,6 +31,10 @@ module.exports = NodeHelper.create({
             case "WMATA_TRAIN_INCIDENTS_GET":
                 this.getTrainIncidents(payload);
                 break;
+
+            case "WMATA_BUS_INCIDENTS_GET":
+                this.getBusIncidents(payload);
+                break;
         }
 
     },
@@ -181,6 +185,68 @@ module.exports = NodeHelper.create({
                     identifier: payload.identifier,
                     trainAlerts: Array.from(trainAlerts),
                     trainDelays: Array.from(trainDelays)
+                });
+            });
+    },
+
+    getBusIncidents(payload) {
+        console.log("Getting bus incidents");
+        const url = "https://api.wmata.com/Incidents.svc/json/BusIncidents";
+
+        fetch(url, {
+            method: "GET",
+            headers: {
+                "api_key": this.apiKey,
+            }
+        })
+            .then((response) => {
+                return response.json();
+            })
+            .then((data) => {
+                const incidents = data['BusIncidents'];
+
+                if (payload.busIncidentRoutes !== null) {
+                    incidents.filter((incident) => {
+                        for (const routeAffected of incident['RoutesAffected']) {
+                            if (payload.busIncidents.includes(routeAffected)) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    });
+                }
+
+                const busAlerts = new Set();
+                const busDelays = new Set();
+
+                console.debug(incidents);
+
+                incidents
+                    .filter((incident) => incident['IncidentType'] === 'Delay')
+                    .forEach((incident) => {
+                        busDelays.add(...incident['RoutesAffected'])
+                    });
+
+                incidents
+                    .filter((incident) => incident['IncidentType'] === 'Alert')
+                    .map((incident) => incident['RoutesAffected'])
+                    .forEach((incidentRoutes) => {
+                        console.debug(incidentRoutes);
+                        busAlerts.add(...incidentRoutes)
+                    });
+
+                // TODO: WMATA claims that the incidents are *usually* either Alert or Delay, but it's subject to
+                // change at any time.  It's probably worth doing a filter for incidents that are not alert / delay and
+                // pass them back to the frontend.
+                console.log("bus incidents");
+                console.debug(busAlerts);
+                console.debug(busDelays);
+
+                this.sendSocketNotification("WMATA_BUS_INCIDENTS_DATA", {
+                    identifier: payload.identifier,
+                    busAlerts: Array.from(busAlerts),
+                    busDelays: Array.from(busDelays),
                 });
             });
     },

@@ -18,6 +18,8 @@ Module.register("MMM-WMATA", {
 
         showBusIncidents: true,
         busIncidentUpdateInterval: 300,
+
+        busIncidentRoutes: null,
     },
 
     /**
@@ -31,6 +33,7 @@ Module.register("MMM-WMATA", {
         this.busUpdateInterval = 0;
 
         this.trainIncidentUpdateInterval = 0;
+        this.busIncidentUpdateInterval = 0;
 
         this.trainTimesLastUpdatedTimestamp = null;
         this.trainTimesLastUpdatedFormatted = null;
@@ -41,9 +44,13 @@ Module.register("MMM-WMATA", {
         this.formattedTrainData = null;
         this.formattedBusData = null;
         this.formattedTrainIncidentData = null;
+        this.formattedBusIncidentData = null;
 
         this.trainDelays = [];
         this.trainAlerts = [];
+
+        this.busDelays = [];
+        this.busAlerts = [];
 
         this.activeBusStops = [];
 
@@ -102,6 +109,12 @@ Module.register("MMM-WMATA", {
 
                     this.updateDom();
                     break;
+                case "WMATA_BUS_INCIDENTS_DATA":
+                    this.busDelays = payload.busDelays;
+                    this.busAlerts = payload.busAlerts;
+
+                    this.updateDom();
+                    break;
             }
         }
     },
@@ -132,6 +145,9 @@ Module.register("MMM-WMATA", {
 
             trainDelays: this.trainDelays,
             trainAlerts: this.trainAlerts,
+
+            busDelays: this.busDelays,
+            busAlerts: this.busAlerts,
         };
     },
 
@@ -152,6 +168,10 @@ Module.register("MMM-WMATA", {
 
         if (this.config.showTrainIncidents === true) {
             this.startTrainIncidentsFetchingLoop(this.config.trainIncidentUpdateInterval);
+        }
+
+        if (this.config.showBusIncidents === true) {
+            this.startBusIncidentsFetchingLoop(this.config.busIncidentUpdateInterval);
         }
     },
 
@@ -188,6 +208,17 @@ Module.register("MMM-WMATA", {
         }
     },
 
+    startBusIncidentsFetchingLoop(busIncidentUpdateInterval) {
+        Log.info("Starting fetching loop for train incidents");
+        this.getBusIncidents();
+
+        if (this.busIncidentUpdateInterval === 0) {
+            this.busIncidentUpdateInterval = setInterval(() => {
+                this.getBusIncidents();
+            }, busIncidentUpdateInterval * 1000);
+        }
+    },
+
     getTrainTimes() {
         Log.info("Fetching train predictions...");
         this.sendSocketNotification("WMATA_TRAIN_TIMES_GET", {
@@ -221,6 +252,16 @@ Module.register("MMM-WMATA", {
         this.sendSocketNotification("WMATA_TRAIN_INCIDENTS_GET", {
             identifier: this.identifier,
             apiKey: this.config.apiKey
+        });
+    },
+
+    getBusIncidents() {
+        Log.info("Fetching bus incidents...");
+
+        this.sendSocketNotification("WMATA_BUS_INCIDENTS_GET", {
+            identifier: this.identifier,
+            apiKey: this.config.apiKey,
+            busIncidentRoutes: null,
         });
     },
 
