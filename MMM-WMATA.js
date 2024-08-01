@@ -15,6 +15,7 @@ Module.register("MMM-WMATA", {
         busUpdateInterval: 60,
         showEmptyBusStops: true,
         busStopFilterFn: (_datetime, _stationCode) => true,
+        busRouteIncidentFilterFn: (_incidentType, _route) => true,
 
         showBusIncidents: true,
         busIncidentUpdateInterval: 300,
@@ -110,8 +111,8 @@ Module.register("MMM-WMATA", {
                     this.updateDom();
                     break;
                 case "WMATA_BUS_INCIDENTS_DATA":
-                    this.busDelays = payload.busDelays;
-                    this.busAlerts = payload.busAlerts;
+                    this.busDelays = payload.busDelays.filter((route) => this.config.busRouteIncidentFilterFn('delay', route));
+                    this.busAlerts = payload.busAlerts.filter((route) => this.config.busRouteIncidentFilterFn('alert', route));
 
                     this.updateDom();
                     break;
