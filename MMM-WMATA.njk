@@ -35,7 +35,7 @@
                         </span>
 
                         {%- for line in trainAlerts -%}
-                            <span class="train-alerts__line-color train_alerts__line-color{{ line }}">{{ line }}</span>
+                            <span class="train-alerts__line train_alerts__line-color-{{ line }}">{{ line }}</span>
                         {%- endfor -%}
                     </div>
                 {% endif %}
