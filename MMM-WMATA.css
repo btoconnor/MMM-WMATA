@@ -41,3 +41,7 @@
     text-align: left;
     padding-left: 1em;
 }
+
+.MMM-WMATA .notice__delays, .MMM-WMATA .notice__alerts {
+    font-weight: bold;
+}
