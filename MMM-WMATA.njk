@@ -23,19 +23,20 @@
                         </span>
 
                         {%- for line in trainDelays -%}
-                            <span class="train-delays__line train-delays__line-color-{{ line }}">{{ line }}</span>
+                            <span class="train-delays__line train-delays__line-color-{{ line }}">{{ trainDelayComma() }} {{ line }}</span>
                         {%- endfor -%}
                     </div>
                 {% endif %}
 
                 {% if trainAlerts.length > 0 %}
+                    {% set trainAlertComma = joiner() %}
                     <div class="train-alerts">
                         <span class="notice__alerts">
                             Alerts:
                         </span>
 
                         {%- for line in trainAlerts -%}
-                            <span class="train-alerts__line train-alerts__line-color-{{ line }}">{{ line }}</span>
+                            <span class="train-alerts__line train-alerts__line-color-{{ line }}">{{ trainAlertComma() }} {{ line }}</span>
                         {%- endfor -%}
                     </div>
                 {% endif %}
