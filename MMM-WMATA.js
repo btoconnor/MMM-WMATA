@@ -274,7 +274,7 @@ Module.register("MMM-WMATA", {
 
         const formatted = [];
 
-        for (let [location, trains] of formattedMap) {
+        for (const [location, trains] of formattedMap) {
             const locationFormatted = {
                 locationName: location,
                 trains: trains.map((train) => {
@@ -283,9 +283,9 @@ Module.register("MMM-WMATA", {
                         minutes: train['MinNumber'],
                         destination: train['DestinationName'] || train['Destination'],
                         location: train['LocationName']
-                    }
+                    };
                 })
-            }
+            };
 
             formatted.push(locationFormatted);
         }
@@ -296,12 +296,12 @@ Module.register("MMM-WMATA", {
     formatBuses(busPredictions) {
         const formatted = [];
 
-        for (let [busStopID, stopInfo] of Object.entries(busPredictions)) {
+        for (const [busStopID, stopInfo] of Object.entries(busPredictions)) {
             const locationFormatted = {
                 locationName: stopInfo['locationName'],
                 busStopID,
                 buses: stopInfo['predictions'],
-            }
+            };
 
             formatted.push(locationFormatted);
         }

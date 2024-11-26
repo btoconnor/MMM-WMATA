@@ -1,0 +1,22 @@
+{
+  "name": "mmm-wmata",
+  "version": "0.0.1",
+  "description": "A MagicMirror plugin for the DC Area's WMATA",
+  "main": "MMM-WMATA.js",
+  "author": {
+    "name": "Brian O'Connor",
+    "url": "https://github.com/btoconnor"
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "npx eslint"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "eslint": "^9.15.0",
+    "globals": "^15.12.0",
+    "semantic-release": "^24.2.0"
+  }
+}
