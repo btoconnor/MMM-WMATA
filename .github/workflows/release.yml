@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
 
 permissions:
   contents: read
@@ -29,8 +29,9 @@ jobs:
         run: npx ci
       - name: 🧩 Install semantic-release extra plugins
         run: npm install --save-dev @semantic-release/changelog @semantic-release/git
+      - name: 🧹 Lint
+        run: npm run lint
       - name: ✅ Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          HUSKY: 0
         run: npx semantic-release
