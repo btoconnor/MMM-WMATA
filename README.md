@@ -7,7 +7,8 @@
 This module allows you to display WMATA train and bus times with expected arrivals on your MagicMirror.
 
 ## Example
-![image](https://github.com/user-attachments/assets/7a7d8a8d-7b0c-43ef-91a0-1da2ae1e8dc1)
+![image](https://github.com/user-attachments/assets/a5c53eb5-55ec-4b1d-9317-9b48127b5ef1)
+
 
 
 ## How it Works
