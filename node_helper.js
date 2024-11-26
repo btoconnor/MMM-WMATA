@@ -99,7 +99,7 @@ module.exports = NodeHelper.create({
             .then(responses => {
                 responses.map((r) => {
                     busPredictions[r.stopID] = r;
-                })
+                });
             })
             .then(() => {
                 console.debug(busPredictions);
@@ -129,7 +129,7 @@ module.exports = NodeHelper.create({
 
                 return { stopID: stopID,
                          predictions: stopPredictions,
-                         locationName: data['StopName']}
+                         locationName: data['StopName']};
             });
 
     },
@@ -153,7 +153,7 @@ module.exports = NodeHelper.create({
                 const trainDelays = new Set();
 
                 incidents
-                    .filter((incident) => { return incident['IncidentType'] === 'Alert' })
+                    .filter((incident) => { return incident['IncidentType'] === 'Alert'; })
                     .map((incident) => {
                         console.log(`split from ${incident['LinesAffected']} is ${incident['LinesAffected'].split("; ")}`);
                         return incident['LinesAffected']
@@ -162,7 +162,7 @@ module.exports = NodeHelper.create({
                             .filter((line) => line !== '');
                     })
                     .forEach((incidentLine) => {
-                        trainAlerts.add(...incidentLine)
+                        trainAlerts.add(...incidentLine);
                     });
 
                 incidents
@@ -174,7 +174,7 @@ module.exports = NodeHelper.create({
                             .filter((line) => line !== '');
                     })
                     .forEach((incidentLine) => {
-                        trainDelays.add(...incidentLine)
+                        trainDelays.add(...incidentLine);
                     });
 
                 // TODO: WMATA claims that the incidents are *usually* either Alert or Delay, but it's subject to
@@ -225,7 +225,7 @@ module.exports = NodeHelper.create({
                 incidents
                     .filter((incident) => incident['IncidentType'] === 'Delay')
                     .forEach((incident) => {
-                        busDelays.add(...incident['RoutesAffected'])
+                        busDelays.add(...incident['RoutesAffected']);
                     });
 
                 incidents
@@ -233,7 +233,7 @@ module.exports = NodeHelper.create({
                     .map((incident) => incident['RoutesAffected'])
                     .forEach((incidentRoutes) => {
                         console.debug(incidentRoutes);
-                        busAlerts.add(...incidentRoutes)
+                        busAlerts.add(...incidentRoutes);
                     });
 
                 // TODO: WMATA claims that the incidents are *usually* either Alert or Delay, but it's subject to
