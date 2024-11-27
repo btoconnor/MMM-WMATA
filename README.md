@@ -4,7 +4,12 @@
 
 ## Description
 
-This module can be configured to show train and bus arrival times to various stations.
+This module allows you to display WMATA train and bus times with expected arrivals on your MagicMirror.
+
+## Example
+![image](https://github.com/user-attachments/assets/a5c53eb5-55ec-4b1d-9317-9b48127b5ef1)
+
+
 
 ## How it Works
 
@@ -69,7 +74,7 @@ Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `
 },
 ```
 
-# Bus Stop Filter Functions
+## Bus Stop Filter Functions
 The train and bus APIs work slightly differently.  We can make a single API call with all the list of train stops and parse them locally to show trains per station.
 However, the bus stop API works differently - we must make a single API call per stop.  To make matters more complicated, buses tend to have separate stops per direction,
 and in many cases will stop at very similar locations, but technically be separate stops even in the same directions.
@@ -79,7 +84,7 @@ of bus stops could easily exhaust the free API limit and most would be checking 
 In order to avoid exhausting the API limit, you can provide a function in your configuration file that will allow you to remove a given bus stop from being
 fetched outside of hours of expected operation.  The default function is to fetch all bus stops at the given `busUpdateInterval`.
 
-## Example
+### Example
 
 Let's say a fictional bus line, the "SCHOOL" line, only operates Monday - Friday from 7am to 9am at a given stop "CORNER".  Refreshing the stop "CORNER" would be useless outside of those hours.
 
@@ -106,10 +111,10 @@ function(now_datetime, stationCode) {
 }
 ```
 
-# Bus Route Incident Filter Functions
+## Bus Route Incident Filter Functions
 Similarly to bus stop filter functions, we can filter incidents for a given route to the ones we're interested in.
 
-## Example:
+### Example:
 ```javascript
 busRouteIncidentFilterFn: (_incidentType, route) => route == 'D33',
 ````
@@ -117,6 +122,6 @@ busRouteIncidentFilterFn: (_incidentType, route) => route == 'D33',
 This function would limit displaying incidents unless the incident affected the "D33" line.
 
 
-# Special Thanks
+## Special Thanks
 
 I originally attempted to use [MMM-DCMetroTimes](https://github.com/kyle-kelly/MMM-DCMetroTimes), but had some issues with bus times on lines that didn't run throughout the day.  While I ultimately rewrote this plugin from scratch, I referenced the code of this repository during development.
