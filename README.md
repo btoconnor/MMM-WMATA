@@ -6,14 +6,12 @@
 
 This module allows you to display WMATA train and bus times with expected arrivals on your MagicMirror.
 
-## Example
-![image](https://github.com/user-attachments/assets/a5c53eb5-55ec-4b1d-9317-9b48127b5ef1)
-
-
+## Screenshot
+![Example: WMATA Schedule](MMM-WMATA-screenshot.png)
 
 ## How it Works
 
-After you installed MMM-WMATA you just configure it with the train and bus stations that you'd like to monitor.  You'll need to generate at [WMATA's website](https://developer.wmata.com/).
+After you installed MMM-WMATA you just configure it with the train and bus stations that you'd like to monitor.  You'll need to generate a developer key at [WMATA's website](https://developer.wmata.com/).
 
 For more information see the [Configuration](#configuration) section.
 
