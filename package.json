@@ -1,8 +1,18 @@
 {
   "name": "mmm-wmata",
   "version": "0.0.1",
-  "description": "A MagicMirror plugin for the DC Area's WMATA",
+  "description": "A MagicMirror plugin for the DC Area's WMATA.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/btoconnor/MMM-WMATA"
+  },
   "main": "MMM-WMATA.js",
+  "keywords": [
+    "MagicMirror",
+    "Public Transport",
+    "WMATA",
+    "Washington DC"
+  ],
   "author": {
     "name": "Brian O'Connor",
     "url": "https://github.com/btoconnor"
