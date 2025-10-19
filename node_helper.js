@@ -147,7 +147,7 @@ module.exports = NodeHelper.create({
                 return response.json();
             })
             .then((data) => {
-                const incidents = data['Incidents'];
+                const incidents = data['Incidents'] || [];
 
                 const trainAlerts = new Set();
                 const trainDelays = new Set();
