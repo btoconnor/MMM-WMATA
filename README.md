@@ -49,6 +49,7 @@ These are the possible options:
 | `trainUpdateInterval`           | <p>The time in seconds between rail time updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The train times will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `60` (1 minute)<br>**Unit:** `seconds`</p>|
 | `showTrainIncidents`            | <p>Whether to show fetch train incident information.</p><p>**Type:** `boolean`<br>**Default value**: `true`</p>|
 | `trainIncidentUpdateInterval`   | <p>The time in seconds between train incident updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The train incidents will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `300` (5 minute)<br>**Unit:** `seconds`</p>|
+| `trainFilterFn`                 | <p>A custom function to filter which trains are displayed.</p><p>**Type:** `function`<br>**Default value:** All trains are displayed.<br>**Note**: See below for information on providing a custom function.</p>|
 | `busStops`                      | <p>A list of bus stop IDs to fetch times for.</p><p>
 | `busUpdateInterval`             | <p>The time in seconds between bus stop updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The bus times will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `60` (1 minute)<br>**Unit:** `seconds`</p>|
 | `showEmptyBusStops`             | <p>Whether to show bus stops that don't have expected arrivals.</p><p>**Type:** `boolean`<br>**Example:** `true` (Bus stops will be shown even if there are no currently predicted buses.)<br>**Default value:** `true` (1 minute)</p>|
@@ -70,6 +71,31 @@ Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `
         trainStations: ['C02']
     }
 },
+```
+
+## Train Filter Function
+You can provide a custom function to filter which trains are displayed. The function receives a train object and must return a boolean — `true` to display the train, `false` to hide it.
+
+Train objects contain properties such as `Line`, `Destination`, `DestinationName`, `DestinationCode`, `Min`, `MinNumber` (numeric minutes until arrival), and `LocationName`.
+
+### Example
+
+To only show Silver line trains:
+
+```js
+trainFilterFn: (train) => train.Line === 'SV',
+```
+
+To hide trains arriving in more than 15 minutes:
+
+```js
+trainFilterFn: (train) => train.MinNumber <= 15,
+```
+
+To hide trains arriving in less than 5 minutes:
+
+```js
+trainFilterFn: (train) => train.MinNumber >= 5,
 ```
 
 ## Bus Stop Filter Functions

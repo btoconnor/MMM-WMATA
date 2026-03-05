@@ -21,6 +21,8 @@ Module.register("MMM-WMATA", {
         busIncidentUpdateInterval: 300,
 
         busIncidentRoutes: null,
+
+        trainFilterFn: (train) => true,
     },
 
     /**
@@ -74,11 +76,12 @@ Module.register("MMM-WMATA", {
 
                     this.startFetchingLoops();
                     break;
-                case "WMATA_TRAIN_TIMES_DATA":
+            case "WMATA_TRAIN_TIMES_DATA":
+                    const trains = payload.trainData.filter(this.config.trainFilterFn);
                     this.trainTimesLastUpdatedTimestamp = now.format("x");
                     this.trainTimesLastUpdatedFormatted = now.format("MMM D - h:mm:ss a");
 
-                    this.formattedTrainData = this.formatTrains(payload.trainData);
+                    this.formattedTrainData = this.formatTrains(trains);
 
                     this.updateDom();
 
