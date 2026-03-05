@@ -22,6 +22,8 @@ Just clone `MMM-WMATA` into the modules folder of your MagicMirror² installatio
 ```bash
 cd ~/MagicMirror/modules
 git clone https://github.com/btoconnor/MMM-WMATA
+cd MMM-WMATA
+npm install
 ```
 
 ## Update
@@ -37,7 +39,7 @@ Restart MagicMirror² after updating.
 
 ## Configuration
 
-In order to use this module, you simply need to provide the `host` `apiKey`, and the `shoppingListID` of the shopping list you'd like to display..
+In order to use this module, you need to provide your `apiKey` and at least one of `trainStations` or `busStops` to monitor.
 
 These are the possible options:
 
@@ -47,19 +49,19 @@ These are the possible options:
 | `apiKey`                        | <p>An API key generated from WMATA's developer portal.</p><p>**REQUIRED** **Type:** `string`<br>**Example:** `"eyhJbcG..."`<br>**Default value:** none</p>|
 | `trainStations`                 | <p>A list of train station IDs to fetch times for.  See [here](https://gist.github.com/emma-k-alexandra/72d2a19e3ebd280e9640f4414f063d6b) for a list of codes.</p>|
 | `trainUpdateInterval`           | <p>The time in seconds between rail time updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The train times will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `60` (1 minute)<br>**Unit:** `seconds`</p>|
-| `showTrainIncidents`            | <p>Whether to show fetch train incident information.</p><p>**Type:** `boolean`<br>**Default value**: `true`</p>|
+| `showTrainIncidents`            | <p>Whether to fetch and show train incident information.</p><p>**Type:** `boolean`<br>**Default value**: `true`</p>|
 | `trainIncidentUpdateInterval`   | <p>The time in seconds between train incident updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The train incidents will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `300` (5 minute)<br>**Unit:** `seconds`</p>|
 | `trainFilterFn`                 | <p>A custom function to filter which trains are displayed.</p><p>**Type:** `function`<br>**Default value:** All trains are displayed.<br>**Note**: See below for information on providing a custom function.</p>|
-| `busStops`                      | <p>A list of bus stop IDs to fetch times for.</p><p>
+| `busStops`                      | <p>A list of bus stop IDs to fetch times for.</p><p>**Type:** `array`<br>**Example:** `['1001195', '1001196']`<br>**Default value:** `[]`</p>|
 | `busUpdateInterval`             | <p>The time in seconds between bus stop updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The bus times will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `60` (1 minute)<br>**Unit:** `seconds`</p>|
-| `showEmptyBusStops`             | <p>Whether to show bus stops that don't have expected arrivals.</p><p>**Type:** `boolean`<br>**Example:** `true` (Bus stops will be shown even if there are no currently predicted buses.)<br>**Default value:** `true` (1 minute)</p>|
+| `showEmptyBusStops`             | <p>Whether to show bus stops that don't have expected arrivals.</p><p>**Type:** `boolean`<br>**Example:** `true` (Bus stops will be shown even if there are no currently predicted buses.)<br>**Default value:** `true`</p>|
 | `busStopFilterFn`               | <p>A custom function to filter which bus stops are fetched at a given time.</p><p>**Type:** `function`<br>See notes below.<br>**Default value:** All specified buses are fetched at the given interval.<br>**Note**: See below for information on providing a custom function.</p>|
 | `busRouteIncidentFilterFn`      | <p>A custom function to filter displaying notifications for a given route.</p><p>**Type:** `function`<br>See notes below. <br>**Default value:** All bus incidents will be shown.</p>|
-| `showBusIncidents`              | <p>Whether to show fetch train incident information.</p><p>**Type:** `boolean`<br>**Default value**: `true`</p>|
+| `showBusIncidents`              | <p>Whether to fetch and show bus incident information.</p><p>**Type:** `boolean`<br>**Default value**: `true`</p>|
 | `busIncidentUpdateInterval`     | <p>The time in seconds between bus incident updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The bus incidents will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `300` (5 minute)<br>**Unit:** `seconds`</p>|
 <!-- prettier-ignore-end -->
 
-Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `mealSortOrder`. Here, we use the `side` meal type as a reminder of things we need to do to prepare for future meals, e.g., thaw meat. `mealTypeName` changes what appears, and `mealSortOrder` moves the side entries to the top of the list for each day.
+Here is an example of an entry in `config.js`:
 
 ```javascript
 {
@@ -68,7 +70,8 @@ Here is an example of an entry in `config.js`. Take note of `mealTypeName` and `
     position: "top_left",
     config: {
         apiKey: "eyhJbcG...",
-        trainStations: ['C02']
+        trainStations: ['C02'],
+        busStops: ['1001195'],
     }
 },
 ```
