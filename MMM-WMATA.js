@@ -150,6 +150,8 @@ Module.register("MMM-WMATA", {
             trainDelays: this.trainDelays,
             trainAlerts: this.trainAlerts,
 
+            hasActiveBusStops: this.activeBusStops.length > 0,
+
             busDelays: this.busDelays,
             busAlerts: this.busAlerts,
         };
