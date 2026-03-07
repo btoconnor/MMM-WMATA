@@ -5,8 +5,8 @@
 {% endif %}
 
 {% if not loading %}
-    {% set showTrains = hasActiveTrainStations or trainDelays.length > 0 or trainAlerts.length > 0 %}
-    {% set showBuses = hasActiveBusStops or busAlerts.length > 0 or busDelays.length > 0 %}
+    {% set showTrains = (not hideEmptyTrains) or hasActiveTrainStations or trainDelays.length > 0 or trainAlerts.length > 0 %}
+    {% set showBuses = (not hideEmptyBuses) or hasActiveBusStops or busAlerts.length > 0 or busDelays.length > 0 %}
     {% set hasTrainNotices = trainDelays.length > 0 or trainAlerts.length > 0 %}
     {% set hasBusNotices = busDelays.length > 0 or busAlerts.length > 0 %}
 
@@ -59,6 +59,12 @@
                             <span class="train-minutes-away">{{ train.minutes }}</span>
                         </div>
                     {% endfor %}
+
+                    {% if station.trains.length == 0 %}
+                        <div class="train-station__empty">
+                            {{ "NO_TRAINS_RUNNING" | translate }}
+                        </div>
+                    {% endif %}
                 </div>
             {% endfor %}
 
@@ -117,7 +123,7 @@
 
                         {% if busStop.buses.length == 0 %}
                             <div class="bus-stop__empty">
-                                No buses running.
+                                {{ "NO_BUSES_RUNNING" | translate }}
                             </div>
                         {% endif %}
                     </div>
