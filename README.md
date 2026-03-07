@@ -59,6 +59,8 @@ These are the possible options:
 | `busRouteIncidentFilterFn`      | <p>A custom function to filter displaying notifications for a given route.</p><p>**Type:** `function`<br>See notes below. <br>**Default value:** All bus incidents will be shown.</p>|
 | `showBusIncidents`              | <p>Whether to fetch and show bus incident information.</p><p>**Type:** `boolean`<br>**Default value**: `true`</p>|
 | `busIncidentUpdateInterval`     | <p>The time in seconds between bus incident updates.</p><p>**Type:** `integer`<br>**Example:** `60` (The bus incidents will be refreshed every 60 seconds (1 minute).)<br>**Default value:** `300` (5 minute)<br>**Unit:** `seconds`</p>|
+| `hideEmptyTrains`               | <p>Whether to hide the trains section entirely when there are no active train predictions or incidents.</p><p>**Type:** `boolean`<br>**Default value:** `true`</p>|
+| `hideEmptyBuses`                | <p>Whether to hide the buses section entirely when there are no active bus predictions or incidents.</p><p>**Type:** `boolean`<br>**Default value:** `true`</p>|
 <!-- prettier-ignore-end -->
 
 Here is an example of an entry in `config.js`:

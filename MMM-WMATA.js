@@ -23,6 +23,9 @@ Module.register("MMM-WMATA", {
         busIncidentRoutes: null,
 
         trainFilterFn: (train) => true,
+
+        hideEmptyTrains: true,
+        hideEmptyBuses: true,
     },
 
     /**
@@ -141,6 +144,7 @@ Module.register("MMM-WMATA", {
         return {
             loading: false,
             trains: this.formattedTrainData,
+            hasActiveTrainStations: this.formattedTrainData && this.formattedTrainData.length > 0,
             trainsLastUpdated: this.trainTimesLastUpdatedFormatted,
 
             buses: this.formattedBusData,
@@ -151,6 +155,9 @@ Module.register("MMM-WMATA", {
             trainAlerts: this.trainAlerts,
 
             hasActiveBusStops: this.activeBusStops.length > 0,
+
+            hideEmptyTrains: this.config.hideEmptyTrains,
+            hideEmptyBuses: this.config.hideEmptyBuses,
 
             busDelays: this.busDelays,
             busAlerts: this.busAlerts,
